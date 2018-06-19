@@ -17,7 +17,7 @@ int achou = 0;
 arma::vec Initial;
 
 arma::mat F(arma::vec X, int p){
-    arma::mat Ret = {{{exp(-X[0]) + exp(X[1]) - pow(X[0],2) - pow(2*X[1],3)}},
+    arma::mat Ret = {{{exp(-X[0]) + exp(X[1]) - pow(X[0],2) - 2*pow(X[1],3)}},
                      {{cos(X[0] + p*X[1]) + p*X[0] - X[1] - 1}}};
     return Ret;
 }
