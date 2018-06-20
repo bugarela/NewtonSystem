@@ -1,9 +1,5 @@
 import numpy
 
-# Altere o p aqui conforme desejado. Gabriela: p = 9, Luiz: p = 21
-p = 9
-chute = numpy.zeros(2)
-
 def chutesQueDivergem():
     i = 0
     while (i < 25):
@@ -83,8 +79,12 @@ def JF(X):
 def newton(X,tol,n,verboso=False,nFixo=False):
 
     k = 0;
+    if(verboso):
+        print "k\t  X(k)\t\tEABS"
+        print " ".join([str(k),"("+format(X[0],'6.6f')+", "+format(X[1],'6.6f')+")",format(0,'6.6f')])
 
     while (k < n):
+
         k = k + 1
         delta = numpy.dot((-numpy.linalg.inv(JF(X))),F(X))
 
@@ -92,27 +92,71 @@ def newton(X,tol,n,verboso=False,nFixo=False):
             break
 
         X = X + delta
+        eabs = numpy.linalg.norm(delta,numpy.inf)
 
-        if ((numpy.linalg.norm(delta,numpy.inf) < tol)):
-            if(verboso):
-                print "chute:"
-                print chute
-                print "Delta"
-                print delta
-                print "X:"
-                print X
-                print "F(X) com p=" + str(p) + ":"
-                print F(X)
+        if(verboso):
+            print " ".join([str(k),"("+format(X[0],'6.6f')+", "+format(X[1],'6.6f')+")",format(eabs,'6.6f')])
 
+        if (eabs < tol):
             if(k==n):
                 return X
             if not (nFixo):
                 return X
+            else:
+                return None
 
     return None
 
+chute = numpy.zeros(2)
+
+p = 9
+print("p = 9")
+print("Converge para solucao 1")
+chute[0] = 0
+chute[1] = 1
+newton(chute,0.00001,5,verboso=True)
+print ""
+
+print("Converge para solucao 2")
+chute[0] = 5
+chute[1] = 6
+newton(chute,0.00001,5,verboso=True)
+print ""
+
+print(">1000 iteracoes")
+chute[0] = 0
+chute[1] = 0
+newton(chute,0.00001,5,verboso=True)
+print ""
+
+p = 21
+print("p = 21")
+print("Converge para solucao 1")
+chute[0] = 0.5
+chute[1] = 1.5
+newton(chute,0.00001,5,verboso=True)
+print ""
+
+print("Converge para solucao 2")
+chute[0] = 8
+chute[1] = 2
+newton(chute,0.00001,5,verboso=True)
+print ""
+
+print(">1000 iteracoes")
+chute[0] = 2
+chute[1] = 0.5
+newton(chute,0.00001,5,verboso=True)
+print ""
+
+'''
+Descomente isso para ver os testes feitos para encontrar chutes
+Escolha um p:
+p = 9 # Gabriela
+p = 21 # Luiz
 chutesParaSol1()
 print "--------------------------------------------"
 chutesParaSol2()
 print "--------------------------------------------"
 chutesQueDivergem()
+'''
