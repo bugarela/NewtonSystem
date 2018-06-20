@@ -1,14 +1,64 @@
-'''
-Initial:
-   55.0000
-  -12.5000
-'''
-
 import numpy
 
-n = 1000
-p = 21
-initial = numpy.zeros(2)
+# Altere o p aqui conforme desejado. Gabriela: p = 9, Luiz: p = 21
+p = 9
+chute = numpy.zeros(2)
+
+def chutesQueDivergem():
+    i = 0
+    while (i < 25):
+        j = 0
+        while (j < 25):
+            chute[0] = i
+            chute[1] = j
+            if (newton(chute,0.00001,1000) is None):
+                print "Diverge: " + str(chute)
+            j = j + 0.25
+        i = i + 0.25
+
+def chutesParaSol1():
+
+    sol1 = numpy.zeros(2)
+    if(p == 9):
+        sol1[0] = 0.16
+        sol1[1] = 1.31
+    elif(p == 21):
+        sol1[0] = 0.15
+        sol1[1] = 1.32
+
+    i = 0
+    while (i < 25):
+        j = 0
+        while (j < 25):
+            chute[0] = i
+            chute[1] = j
+            resultado = newton(chute,0.00001,5,nFixo=True)
+            if(resultado is not None and (numpy.linalg.norm(resultado - sol1,numpy.inf) < 0.01)):
+                print "Converge para a solucao " + str(sol1) + ": " + str(chute)
+            j = j + 0.25
+        i = i + 0.25
+
+def chutesParaSol2():
+
+    sol2 = numpy.zeros(2)
+    if(p == 9):
+        sol2[0] = 0.7
+        sol2[1] = 6.14
+    elif(p == 21):
+        sol2[0] = 0.38
+        sol2[1] = 6.13
+
+    i = 0
+    while (i < 25):
+        j = 0
+        while (j < 25):
+            chute[0] = i
+            chute[1] = j
+            resultado = newton(chute,0.00001,5,nFixo=True)
+            if(resultado is not None and (numpy.linalg.norm(resultado - sol2,numpy.inf) < 0.01)):
+                print "Converge para a solucao " + str(sol2) + ": " + str(chute)
+            j = j + 0.25
+        i = i + 0.25
 
 def F(X):
     ret = numpy.zeros(2)
@@ -30,7 +80,7 @@ def JF(X):
     return ret
 
 
-def newton(X,tol):
+def newton(X,tol,n,verboso=False,nFixo=False):
 
     k = 0;
 
@@ -44,52 +94,25 @@ def newton(X,tol):
         X = X + delta
 
         if ((numpy.linalg.norm(delta,numpy.inf) < tol)):
-            if(k==5):
-                print "Initial:"
-                print initial
+            if(verboso):
+                print "chute:"
+                print chute
                 print "Delta"
                 print delta
                 print "X:"
                 print X
                 print "F(X) com p=" + str(p) + ":"
                 print F(X)
-            return X
 
-    #raise NameError('num. max. iter. excedido.')
-    X[0] = None
-    X[1] = None
-    return X
+            if(k==n):
+                return X
+            if not (nFixo):
+                return X
 
-## PARA P = 9
-#chute pra k=5 = 1 0
-initial[0] = 0.16
-initial[1] = 1.31
-sol = newton(initial,0.00001)
+    return None
 
-#chute pra k=5 = 24 7
-initial[0] = 0.7
-initial[1] = 6.14
-sol = newton(initial,0.00001)
-
-#chute que divege: 0 700
-
-## PARA P = 21
-#chute que divege: 0 170
-#chute pra k=5 = 0 1
-#chute pra k=5 = 6 6
-
-i = 0
-j = 0
-while (i < 1000):
-    j = 0
-    while (j < 1000):
-        initial[0] = i
-        initial[1] = j
-        sol = newton(initial,0.00001)
-        '''
-        if(sol.all(None)):
-            print "Deu ruim:"
-            print initial
-        '''
-        j = j + 1
-    i = i + 1
+chutesParaSol1()
+print "--------------------------------------------"
+chutesParaSol2()
+print "--------------------------------------------"
+chutesQueDivergem()
